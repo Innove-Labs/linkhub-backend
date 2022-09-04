@@ -15,6 +15,7 @@ authServices.registerNewUser = async (email : string, password : string, userNam
     })
     const savedUser = await user.save()
     return {
+        _id : savedUser._id,
         email : savedUser.email,
         userName : savedUser.userName,
         emailVerified : savedUser.emailVerified
