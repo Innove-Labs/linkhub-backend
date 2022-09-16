@@ -1,4 +1,4 @@
-import { Request } from "express"
+import { Request, urlencoded } from "express"
 export {}
 const express = require("express")
 const cors = require("cors")
@@ -11,6 +11,8 @@ const {uuidv4} = require("uuid")
 const app = express()
 
 app.use(express.json())
+app.use(urlencoded({extended : true}))
+app.use(cors())
 if(environment === "production"){
     app.set('trust proxy', 1) // trust first proxy
     app.use(session({
@@ -20,7 +22,8 @@ if(environment === "production"){
         cookie: { secure: true, maxAge : 7*24*60*60*1000 },
         genId : (req : Request) => uuidv4(),
         store: MongoStore.create({
-            mongoUrl : dbString
+            mongoUrl : dbString,
+            autoRemove : 'native'
           })
       }))
 } else {
@@ -33,7 +36,8 @@ if(environment === "production"){
         },
         genId : (req : Request) => uuidv4(),
         store: MongoStore.create({
-            mongoUrl : dbString
+            mongoUrl : dbString,
+            autoRemove : 'native'
           }),
         resave: false,
         saveUninitialized: false
